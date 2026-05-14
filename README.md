@@ -1,11 +1,11 @@
 # SOUL&BODY
 
-Bu proje Web Tabanlı Programlama dersi kapsamında geliştirilmiştir. HTML5 ve JavaScript kullanılarak yapılmış bir arena konseptli strateji oyunudur.
+BBu proje Web Tabanlı Programlama dersi (veya kişisel portfolyo) kapsamında geliştirilmiştir. Sadece HTML5 Canvas ve Vanilla JavaScript kullanılarak kodlanmış, sonsuz ilerlemeli (infinite scroller) ve yerçekimi manipülasyonuna dayalı 2 boyutlu bir piksel art platform oyunudur.
 
-Oyuncu ve rakip sırayla pin yerleştirerek toplarla bu pinleri hedef alır. Her pin farklı etkiler sağlar: saldırı, savunma ve iyileştirme. Amaç, rakibin canını sıfıra indirerek oyunu kazanmaktır.
+Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa Boss Portalları ile evrenin kurallarını altüst eder. Yerçekiminin yön değiştirdiği bu macerada reflekslerinizi ve hızınızı test edin!
 
 ## 📌 Proje Linki
-https://MericAkman/SOUL-BODY.github.io/
+[https://MericAkman/SOUL-BODY.github.io/](https://github.com/MericAkman/SOUL-BODY)
 
 
 ## 📸 Ekran Görüntüleri
