@@ -10,7 +10,7 @@ https://MericAkman/SOUL-BODY.github.io/
 
 ## 📸 Ekran Görüntüleri
 
-![ekran1](proje/BG/start-bg.png)
+![ekran1](Proje/BG/start-bg.png)
 ![ekran2](images/ekran2.png)
 
 ## 🎮 Nasıl Oynanır?
