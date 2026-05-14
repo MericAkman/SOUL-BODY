@@ -1,8 +1,8 @@
 # SOUL&BODY
 
-Bu proje Web Tabanlı Programlama dersi (veya kişisel portfolyo) kapsamında geliştirilmiştir. Sadece HTML5 Canvas ve Vanilla JavaScript kullanılarak kodlanmış, sonsuz ilerlemeli (infinite scroller) ve yerçekimi manipülasyonuna dayalı 2 boyutlu bir piksel art platform oyunudur.
+Bu proje Web Tabanlı Programlama dersi kapsamında geliştirilmiştir. Sadece HTML5 Canvas ve JavaScript kullanılarak kodlanmış, sonlu olacak bir şekilde yerçekimi manipülasyonuna dayalı 2 boyutlu bir piksel art platform oyunudur.
 
-Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa Boss Portalları ile evrenin kurallarını altüst eder. Yerçekiminin yön değiştirdiği bu macerada reflekslerinizi ve hızınızı test edin!
+Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa portallar ile evrenin kurallarını altüst eder. Yerçekiminin yön değiştirdiği bu macerada reflekslerinizi ve hızınızı test edin!
 
 ## 📌 Proje Linki
 [https://MericAkman/SOUL-BODY.github.io/](https://github.com/MericAkman/SOUL-BODY)
@@ -49,12 +49,10 @@ Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa Boss Portall
 
 ---
 
-### 🎥 İlham Alınan / İzlenen Videolar ve Orijinal Oyun Linki
+### 🎥 İzlenen Videolar
 
-- [Coding Challenge 184: Collisions Without a Physics Library!](https://youtu.be/dJNFPv9Mj-Y?si=cvyiybavjj1uP-SY)
-- [Simple to advanced collision detection using vanilla JavaScript and HTML Canvas (VWD - Lecture 7)](https://www.youtube.com/watch?v=Uv8N6OS7V_k&t=4987s)
-- [Dice of Fate](https://twinfox.itch.io/dice-of-fate)
+- [2D Physics Engine from Scratch (JS) 00: Introduction](https://youtu.be/TUZvvmu4Yz4?list=PLo6lBZn6hgca1T7cNZXpiq4q395ljbEI_)
+- [How To Make A JavaScript Platformer - Part 5 1/2 - Tunneling)](https://www.youtube.com/watch?v=jk5EsKYoMo8)
+- [Basic Collision Detection in LÖVE 2D | AABB Collision Detection Explained for 2D Games](https://youtu.be/PxOw4lQOwDo?si=y6YvgnvRqjSdWXtN)
 
----
 
-Bu proje **bitkicayi-Burak Ege Yaşar- tarafından** geliştirilmiştir.
