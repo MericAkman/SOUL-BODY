@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOUL&BODY</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #111; 
+            background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('BG/body-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        
+        #oyunAlaniKapsayici {
+            display: none; 
+            position: relative;
+        }
+        
+        canvas {
+            background-color: #ffffff;
+            border: 4px solid #111; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
+            display: block;
+            transition: box-shadow 0.5s ease;
+        }
+        
+        #bilgiEkrani {
+            position: absolute;
+            top: 25px;
+            left: 25px; 
+            text-align: left;
+            color: #fff;
+            background-color: rgba(0, 0, 0, 0.5);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px); 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+            max-width: 260px;
+            display: none; 
+            z-index: 50;
+        }
+
+        #bilgiEkrani h2 { 
+            margin-top: 0; 
+            font-size: 20px; 
+            color: #e74c3c; 
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+        #bilgiEkrani p { 
+            margin: 10px 0; 
+            font-size: 14px; 
+            line-height: 1.6;
+        }
+        #bilgiEkrani b { color: #f1c40f; }
+
+        #baslangicMenusu {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-image: url('BG/start-bg.png'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat; 
+            z-index: 100;
+        }
+
+        #baslaButonu {
+            position: absolute;
+            top: 70%; 
+            left: 75%; 
+            transform: translate(-50%, -50%); 
+            padding: 20px 60px;
+            font-size: 30px;
+            font-weight: bold;
+            color: white;
+            background-color: #e74c3c;
+            border: 4px solid #c0392b;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s; 
+            box-shadow: 0 8px 15px rgba(0,0,0,0.3);
+        }
+
+        #baslaButonu:hover { 
+            background-color: #c0392b; 
+            transform: translate(-50%, -50%) scale(1.1); 
+        }
+
+        #tekrarButonu {
+            position: absolute;
+            top: 60%;
+            left: 50%;
+            transform: translate(-50%, -50%); 
+            padding: 15px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background-color: #3498db;
+            border: 4px solid #2980b9;
+            border-radius: 10px;
+            cursor: pointer;
+            display: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+            white-space: nowrap;
+        }
+
+        #tekrarButonu:active { 
+            transform: translate(-50%, -45%); 
+        }
+
+        /* --- FİNAL EKRANI CSS KISMI --- */
+        #finalEkrani {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: #ffffff;
+            background-image: url('BG/final-bg.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 200;
+            display: none;
+            opacity: 0; 
+            transition: opacity 3s ease-in; 
+            flex-direction: column;
+            justify-content: flex-end; 
+            align-items: center;
+            padding-bottom: 80px; 
+            box-sizing: border-box;
+        }
+
+        #finalSkorYazisi {
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 0px 0px 10px rgba(0,0,0,0.8);
+            margin-bottom: 20px;
+        }
+
+        #finalTekrarButonu {
+            padding: 15px 50px;
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            background-color: #3498db;
+            border: 4px solid #2980b9;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            transition: transform 0.1s;
+        }
+
+        #finalTekrarButonu:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="baslangicMenusu">
+        <button id="baslaButonu">BAŞLAT</button>
+    </div>
+
+    <!-- FİNAL EKRANI HTML KISMI -->
+    <div id="finalEkrani">
+        <div id="finalSkorYazisi">Toplam Skor: 0</div>
+        <button id="finalTekrarButonu">TEKRAR DENE</button>
+    </div>
+
+    <div id="bilgiEkrani">
+        <h2>KONTROLLER</h2>
+        <p>Hareket: <b>Sağ / Sol Ok</b></p>
+        <p>Zıplama: <b>Yukarı Ok</b></p>
+        <p>Süper Zıplama: <b>Boşluk (Space)</b></p>
+        <p>Duraklat: <b>ESC Tuşu</b></p>
+        <p style="font-size: 11px; color: #aaa; margin-top: 15px;">(Evren 1000 puanda bir değişir, 5000'de portal gelir!)</p>
+    </div>
+
+    <div id="oyunAlaniKapsayici">
+        <canvas id="oyunEkrani" width="400" height="600"></canvas>
+        <button id="tekrarButonu">TEKRAR DENE</button>
+    </div>
+
+    <script>
+        //-------------------------------------------------------------------------------------------------------------
+        // 1. HTML ARAYÜZÜ VE CANVAS BAĞLANTILARI
+        
+        let canvas = document.getElementById('oyunEkrani'); 
+        let ctx = canvas.getContext('2d'); 
+        //ayırdığığımız canvas bölgesine çizim yapabilmemize olanak sağlar
+
+        let menuEkrani = document.getElementById('baslangicMenusu'); 
+        let butonaBas = document.getElementById('baslaButonu'); 
+        let oyunAlani = document.getElementById('oyunAlaniKapsayici'); 
+        let tekrarOynaButonu = document.getElementById('tekrarButonu'); 
+        let egitimYazisi = document.getElementById('bilgiEkrani');
+        
+        let finalEkraniKatmani = document.getElementById('finalEkrani');
+        let finalSkorGostergesi = document.getElementById('finalSkorYazisi');
+        let finalTekrarButonu = document.getElementById('finalTekrarButonu');
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 2. SES DOSYALARI 
+        
+        let sesZiplama = new Audio('sounds/jump-sound.mp3');
+        let sesElma = new Audio('sounds/collect-sound.mp3');
+        let sesFinal = new Audio('sounds/final-sound.mp3');
+
+        let sesArkaplan = new Audio('sounds/bg-sound.mp3');
+        sesArkaplan.loop = true; 
+        sesArkaplan.volume = 0.5; 
+        //arka plan müziğinin kulağı çok yormaması için kısık tuttuk
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 3. OYUN SABİTLERİ VE PLATFORM AYARLARI
+        
+        let KARE_GENISLIK = 36;     // platformların 1 tanesinin görselinin genişliği
+        let KARE_YUKSEKLIK = 20;    // Platform 1 tanesinin görselinin yüksekliği
+        let PLATFORM_KALINLIK = 20; // çarpışma için kullanılan kalınlık
+        let BOSS_KALINLIK = 45;     // portal kalınlığı
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 4. GÖRSEL VARLIKLAR (ASSETS) YÜKLEME SÜRECİ
+        
+        let resimler = {
+            arkaplanDuz: new Image(),
+            arkaplanTers: new Image(),
+            durmaDuz: new Image(), 
+            durmaTers: new Image(),
+            yurumeAnimasyonu: [],            
+            ziplamaAnimasyonu: [],            
+            solaZiplamaAnimasyonu: [],
+            platformDuz: new Image(),
+            platformTers: new Image(),
+            ozelPlatform: new Image(), 
+            elma: new Image(), 
+            bossDuz: [],
+            bossTers: []
+        };
+        //assetlerin yüklenmesinde herhangi bir sorun yaşanmaması için burada tanımladık(burası olmadan denediğimizde assetlerin yüklenmediği durumlarla karşılaştık)
+
+        // Resim kaynaklarını tanımlanıyoruz
+        resimler.arkaplanDuz.src = 'BG/background.png';
+        resimler.arkaplanTers.src = 'BG/background-reverse.png';
+        resimler.durmaDuz.src = 'sprites/default.png';
+        resimler.durmaTers.src = 'sprites/default-reverse.png';
+        resimler.platformDuz.src = 'platforms/platform.png';
+        resimler.platformTers.src = 'platforms/platform-reverse.png';
+        resimler.ozelPlatform.src = 'platforms/special-platform.png'; 
+        resimler.elma.src = 'sprites/apple.png';
+
+        //--------Karakterin Yürüme Animasyonu
+        //kolaylık olması açısından resimleri sıralı numaralarla isimlendirdik
+        for (let i = 1; i <= 7; i++) {
+            let resim = new Image(); 
+            resim.src = 'sprites/walk/' + i + '.png';
+            resimler.yurumeAnimasyonu.push(resim);
+        }
+
+        //--------Karakterin Zıplama Animasyonu
+        for (let i = 1; i <= 6; i++) {
+            let resim = new Image(); 
+            resim.src = 'sprites/jump/' + i + '.png';
+            resimler.ziplamaAnimasyonu.push(resim);
+        }
+
+        //--------Karakterin Sola Zıplama Animasyonu
+        for (let i = 1; i <= 2; i++) {
+            let resim = new Image(); 
+            resim.src = 'sprites/left-jump/' + i + '.png';
+            resimler.solaZiplamaAnimasyonu.push(resim);
+        }
+
+
+        //--------Boss / Portal Geçiş Animasyonu 
+        for (let i = 1; i <= 8; i++) {
+            let resimN = new Image(); 
+            resimN.src = 'portals/portal/' + i + '.png';
+            resimler.bossDuz.push(resimN);
+
+            let resimR = new Image(); 
+            resimR.src = 'portals/portal-reverse/' + i + '.png';
+            resimler.bossTers.push(resimR);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 5. OYUN MOTORU DURUM DEĞİŞKENLERİ
+        
+        let menudeMi = true;
+        let skor = 0;
+        let oyunBitti = false; 
+        let oyunKazanildi = false; 
+        let oyunBasladi = false; 
+        let oyunDuraklatildi = false; 
+        let elmaGucuVar = false; 
+        let beyazlamaMiktari = 0; 
+        let tersEvren = false; 
+        let oyunDurdu = false; 
+        let sonrakiEvrenSkoru = 1000;
+        let boss5000Geldi = false;
+        let boss6000Geldi = false;
+        let kaymaHizi = 0.3; 
+        let maksimumHiz = 1.8;
+        //normalde oyuncunun özellikleriyle bu değer 2.2'ye kadar max hız değerini karşılayabilmektedir ancak oynanışın kolay olması için bunu 1.8 değerine düşürdük.
+
+        let platformlar = [];
+        let platformSayaci = 0;
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 6. OYUNCU (PLAYER) FİZİK VE ANİMASYON OBJESİ
+        
+        let oyuncu = { 
+            x: 200, 
+            y: 540, 
+            yaricap: 15, 
+            hizX: 0, 
+            hizY: 0, 
+            hareketHizi: 4, 
+            yercekimi: 0.4, 
+            yerdeMi: false, 
+            kacinciPlatformda: 0, 
+            baktigiYon: 'sol',      
+            durum: 'durma', 
+            kareIndexi: 0,      //hangi resmin gösterilceğini tutar    
+            kareZamani: 0,      //resim ekranda ne kadar duruyor bilgisini tutar      
+            kareGecikmesi: 5 
+        };
+        
+        let tuslar = { sag: false, sol: false };
+        //karakter animasyonunda basılı tutulma durumunda akıcı bir görüntü oluşsun diye hareket edip durup tekrar hareket etmeye devam etme şeklinde olmaması için
+
+        //--------İlk güvenli platformu manuel olarak oluşturuyoruz
+        platformlar.push({ 
+            x: 0, 
+            y: 600 - PLATFORM_KALINLIK, 
+            genislik: canvas.width, 
+            yukseklik: PLATFORM_KALINLIK, 
+            elmaVarMi: false, 
+            elmaAlindiMi: false,
+            bordoMu: false, 
+            bossMu: false, 
+            tetiklendiMi: false, 
+            silinecekMi: false, 
+            parlamaZamani: 0, 
+            parlamaYaricapi: 0, 
+            puanAlindiMi: true, 
+            id: platformSayaci 
+        });
+        platformSayaci++; 
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 7. PLATFORM ÜRETİM ALGORİTMASI
+        
+        function platformUret(yKonumu, eskiPlatform) {
+            let parcaSayisi = Math.floor(Math.random() * 4) + 3;     //adet
+            let rastgeleGenislik = parcaSayisi * KARE_GENISLIK;     //pixele dönüşüm
+            let ulasimMesafesi = 180;
+            //karakterin hız zıplama gücü ve yer çekimi özellikleri göz önünde bulundurularak hesaplanmış max atlıyabileceği pixel mesafesi
+
+            //Zeminlerin oyuncunun erişemeyeceği kadar uzak olmasını engelliyoruz
+            //burada platformun x değeri onun en sol ucunu vermektedir
+            let enSol = eskiPlatform.x - ulasimMesafesi;
+            if (enSol < 0) enSol = 0;
+            
+            let enSag = eskiPlatform.x + eskiPlatform.genislik + ulasimMesafesi - rastgeleGenislik;
+            if (enSag > canvas.width - rastgeleGenislik) enSag = canvas.width - rastgeleGenislik;
+            //oyun alanımızın içerisinde kalması için bu kontrolü yaptık
+
+            let rastgeleX = Math.random() * (enSag - enSol) + enSol;
+            //random fonksiyonu 0 1 arasında değer ürettiğinden benim en sağ en sol arasında bir büyüklük seçer
+            //çıkan bu sonucu benim başlangıç noktama yani en sola eklersem yeni eklenecek olanın x değerine erişmiş olurum
+            let ozelPlatformCiksin = false;
+            
+            //--------İlerleyen safhalarda bordo platform ihtimali ekleniyor
+            //direk oyun başladığı gibi özel durumlar yaşanmasın oyun bi düz ilerlesin diye bunun çıktığı alt sınırı belirledik
+            if (skor >= 1500 && eskiPlatform.id !== 0 && eskiPlatform.bordoMu === false) {
+                if (Math.random() < 0.08) {
+                    ozelPlatformCiksin = true; 
+                }
+            }
+
+            //--------Elma çıkması
+            let elmaCiksin = false;
+            //elma ve özel platformun aynı anda denk gelmesini istemiyoruz o yüzden elmayı özel olmayan platforma ekledik
+            if (ozelPlatformCiksin === false && kaymaHizi > 1.0) {
+                if (Math.random() < 0.018) {
+                    elmaCiksin = true;
+                }
+            }
+
+            platformlar.push({ 
+                x: rastgeleX, 
+                y: yKonumu, 
+                genislik: rastgeleGenislik, 
+                yukseklik: PLATFORM_KALINLIK, 
+                elmaVarMi: elmaCiksin, 
+                elmaAlindiMi: false, 
+                bordoMu: ozelPlatformCiksin, 
+                bossMu: false,
+                tetiklendiMi: false,
+                silinecekMi: false,
+                parlamaZamani: 0, 
+                parlamaYaricapi: 0, 
+                puanAlindiMi: false, 
+                id: platformSayaci 
+            });
+            platformSayaci++; 
+        }
+
+        //--------Oyuna girerken ekranı dolduracak ilk platformları oluşturuyoruz
+        // oyun açıldığında ekranda platformlar var olur halde dursun istiyoruz ve ekranda o anda max 6 platform bulunabiliyor başlangıç hariç
+        for (let i = 1; i < 7; i++) {
+            let usttekiPlatform = platformlar[platformlar.length - 1];
+            let mesafe = 110;
+            if (usttekiPlatform.bordoMu === true) mesafe = 250;
+            platformUret(usttekiPlatform.y - mesafe, usttekiPlatform);
+        }
+
+        //--------Boss/Portal üretimi
+        function bossUret(hangiSkor) {
+            let uctaki = platformlar[0]; 
+            for (let i = 1; i < platformlar.length; i++) {
+                //basit bir min değer bulmaya benzer fonksiyon kurduk
+                //evrene göre işaret değişecek
+                if (tersEvren === false) {
+                    if (platformlar[i].y < uctaki.y) uctaki = platformlar[i];
+                } 
+                else {
+                    if (platformlar[i].y > uctaki.y) uctaki = platformlar[i];
+                }
+            }
+
+            let bosluk = (hangiSkor === 6000) ? 225 : 150; 
+            //düz evrende  evren terse döndükten sonra özel platformun zıplaması yetsin diye düz evrendeki boşluğu özel ayarladık
+
+            let yKonumu = (tersEvren === true) ? uctaki.y + bosluk : uctaki.y - bosluk;
+
+            platformlar.push({ 
+                x: 0, 
+                y: yKonumu, 
+                genislik: canvas.width, 
+                yukseklik: BOSS_KALINLIK, 
+                elmaVarMi: false, 
+                elmaAlindiMi: false, 
+                bordoMu: false, 
+                bossMu: true,
+                bossTipi: hangiSkor, 
+                tetiklendiMi: false, 
+                silinecekMi: false,
+                parlamaZamani: 0, 
+                parlamaYaricapi: 0, 
+                puanAlindiMi: true, 
+                kareIndexi: 0, 
+                kareZamani: 0, 
+                id: platformSayaci 
+            });
+            platformSayaci++; 
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 8. OYUN SIFIRLAMA FONKSİYONU
+        
+        function oyunuSifirla() { 
+            skor = 0; 
+            oyunBitti = false; 
+            oyunKazanildi = false; 
+            oyunBasladi = false; 
+            oyunDuraklatildi = false; 
+            elmaGucuVar = false; 
+            tersEvren = false; 
+            oyunDurdu = false; 
+            sonrakiEvrenSkoru = 1000; 
+            boss5000Geldi = false; 
+            boss6000Geldi = false; 
+            platformSayaci = 0; 
+            kaymaHizi = 0.3; 
+            beyazlamaMiktari = 0; 
+            
+            canvas.style.boxShadow = '0 0 30px rgba(0,0,0,0.8)';
+            
+            //--------Sesleri sıfırlayıp arka plan müziğini baştan başlatıyoruz
+            sesFinal.pause();
+            sesFinal.currentTime = 0;
+            sesArkaplan.currentTime = 0;
+            sesArkaplan.play().catch(e => console.log("Arkaplan müziği başlatılamadı:", e));
+
+            finalEkraniKatmani.style.transition = 'none'; 
+            finalEkraniKatmani.style.opacity = '0';
+            finalEkraniKatmani.style.display = 'none';
+            setTimeout(() => finalEkraniKatmani.style.transition = 'opacity 3s ease-in', 50);
+
+            oyuncu.x = 200; 
+            oyuncu.y = 540; 
+            oyuncu.hizY = 0; 
+            oyuncu.yercekimi = 0.4; 
+            oyuncu.yerdeMi = false; 
+            oyuncu.kacinciPlatformda = 0; 
+            oyuncu.baktigiYon = 'sol'; 
+            oyuncu.durum = 'durma'; 
+            oyuncu.kareIndexi = 0; 
+            oyuncu.kareZamani = 0; 
+            
+            platformlar = []; 
+            platformlar.push({ 
+                x: 0, 
+                y: 600 - PLATFORM_KALINLIK, 
+                genislik: 
+                canvas.width, 
+                yukseklik: PLATFORM_KALINLIK, 
+                elmaVarMi: false, 
+                elmaAlindiMi: false, 
+                bordoMu: false, 
+                bossMu: false, 
+                tetiklendiMi: false, 
+                silinecekMi: false, 
+                parlamaZamani: 0,
+                parlamaYaricapi: 0, 
+                puanAlindiMi: true, 
+                id: platformSayaci 
+            });
+            platformSayaci++; 
+            
+            for (let i = 1; i < 7; i++) { 
+                let ustteki = platformlar[platformlar.length - 1]; 
+                let mesafe = (ustteki.bordoMu === true) ? 250 : 110;
+                platformUret(ustteki.y - mesafe, ustteki); 
+            } 
+            
+            tuslar.sag = false; 
+            tuslar.sol = false; 
+            egitimYazisi.style.display = 'block'; 
+            tekrarOynaButonu.style.display = 'none'; 
+            oyunDongusu(); 
+        }
+
+        //--------Ana Menü Başlat Butonu
+        butonaBas.addEventListener('click', function() { 
+            menuEkrani.style.display = 'none'; 
+            oyunAlani.style.display = 'block'; 
+            egitimYazisi.style.display = 'block'; 
+            menudeMi = false; 
+            
+            // Arka plan müziğini oyuna ilk girildiğinde başlat
+            sesArkaplan.play().catch(e => console.log("Arkaplan müziği başlatılamadı:", e));
+            
+            oyunDongusu(); 
+        });
+        
+        tekrarOynaButonu.addEventListener('click', oyunuSifirla);
+        finalTekrarButonu.addEventListener('click', oyunuSifirla);
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 9. KONTROLCÜLER VE FİZİK TETİKLEYİCİLERİ
+        
+        function karakterZipla(ziplamaGucu) { 
+            //--------Yerçekimi yönüne göre dikey hızı ayarlama
+            if (tersEvren === true) oyuncu.hizY = ziplamaGucu;
+            else oyuncu.hizY = -ziplamaGucu;
+            
+            oyuncu.yerdeMi = false;
+
+            //--------Zıplama sesini oynat
+            sesZiplama.currentTime = 0;
+            //üst üste bastığımızda ses sürekli oynasın diye currentTime değerini sıfıra eşitledik
+            sesZiplama.play().catch(e => console.log("Zıplama sesi çalınamadı:", e));
+            
+            if (oyunBasladi === false) { 
+                oyunBasladi = true;
+                egitimYazisi.style.display = 'none'; 
+            }
+        }
+
+        window.addEventListener('keydown', function(olay) { 
+            //--------Tarayıcının ok tuşlarıyla aşağı yukarı kaymasını engelle
+            if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Escape"].includes(olay.code)) {
+                olay.preventDefault();
+                //varsayılan özelliklerinde kullanılmasını istemedeğimizden bunu yaptık
+                //arrowdown kullanmamamıza rağmen yanlışlıkla basılmaması için onu da devre dışı bıraktık
+            }
+
+            if (menudeMi === true || oyunBitti === true) return; 
+
+            //--------Duraklatma Mantığı
+            if (olay.code === 'Escape' && oyunBasladi === true && oyunDurdu === false) {
+                if (oyunDuraklatildi === true) {
+                    oyunDuraklatildi = false;
+                    sesArkaplan.play();
+                } 
+                else {
+                    oyunDuraklatildi = true;
+                    sesArkaplan.pause(); 
+                }
+            }
+
+            if (oyunDuraklatildi === true) return;
+            
+            if (olay.code === 'ArrowRight') { tuslar.sag = true; oyuncu.baktigiYon = 'sag'; }
+            if (olay.code === 'ArrowLeft') { tuslar.sol = true; oyuncu.baktigiYon = 'sol'; }
+            
+            //--------Normal Zıplama
+            if (olay.code === 'ArrowUp' && oyuncu.yerdeMi === true && oyunDurdu === false) { 
+                let zipGucu = elmaGucuVar ? 18 : 12; 
+                karakterZipla(zipGucu);
+                elmaGucuVar = false; 
+            }
+
+            //--------Süper Zıplama (Özel Bordo Platform için)
+            if (olay.code === 'Space' && oyuncu.yerdeMi === true && oyunDurdu === false) {
+                let bulunduguPlatform = platformlar.find(p => p.id === oyuncu.kacinciPlatformda);
+                if (bulunduguPlatform && bulunduguPlatform.bordoMu === true) {
+                    karakterZipla(16); 
+                    elmaGucuVar = false; 
+                }
+            }
+        });
+
+        window.addEventListener('keyup', function(olay) { 
+            if (olay.code === 'ArrowRight') tuslar.sag = false; 
+            if (olay.code === 'ArrowLeft') tuslar.sol = false; 
+        });
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 10. EVREN DEĞİŞİM FONKSİYONLARI
+       
+        //--------Her 1000 puanda normal yerçekimi değişimi
+        function normalEvrenDegisimi() {
+            oyunDurdu = true;
+            setTimeout(function() { 
+                tersEvren = !tersEvren;
+                //evren değiştiğinden dolayı tersini alıyoruz
+                oyuncu.yercekimi = tersEvren ? -0.4 : 0.4; 
+                oyunDurdu = false; 
+
+                let ustundeDurdugu = platformlar.find(p => p.id === oyuncu.kacinciPlatformda);
+                if (ustundeDurdugu) {
+                    ustundeDurdugu.puanAlindiMi = true; 
+                    platformlar = [ustundeDurdugu]; 
+                    if (oyuncu.yerdeMi === true) {
+                        oyuncu.y = tersEvren ? (ustundeDurdugu.y + ustundeDurdugu.yukseklik + oyuncu.yaricap) : (ustundeDurdugu.y - oyuncu.yaricap);
+                        oyuncu.hizY = 0;
+                    }
+                }
+            }, 1000);
+        }
+
+        //--------Portala girince evren değişimi
+        function bossPlatformuIleGecis(bossPlat) {
+            oyunDurdu = true;
+            tersEvren = !tersEvren;
+            oyuncu.yercekimi = tersEvren ? -0.4 : 0.4;
+            //Ergün Hocamıza en içten selamlar...
+
+            let yeniY = tersEvren ? (bossPlat.y + 100) : (bossPlat.y - 100);
+
+            //Oyuncuyu karşılayacak yeni güvenli platform oluşturuluyor
+            let yeniIsinlanmaYeri = {
+                x: canvas.width / 2 - 54, //18*3 değerinden bulduk
+                y: yeniY, 
+                genislik: 108, 
+                yukseklik: 
+                PLATFORM_KALINLIK,
+                elmaVarMi: false, 
+                elmaAlindiMi: false, 
+                bordoMu: true, 
+                bossMu: false,
+                tetiklendiMi: false, 
+                silinecekMi: false, 
+                parlamaZamani: 40, 
+                parlamaYaricapi: 0,
+                puanAlindiMi: true, 
+                kareIndexi: 0, 
+                kareZamani: 0, 
+                id: platformSayaci
+            };
+            platformSayaci++;
+
+            platformlar = [yeniIsinlanmaYeri]; 
+            oyuncu.x = yeniIsinlanmaYeri.x + (yeniIsinlanmaYeri.genislik / 2);
+            oyuncu.y = tersEvren ? (yeniIsinlanmaYeri.y + yeniIsinlanmaYeri.yukseklik + oyuncu.yaricap) : (yeniIsinlanmaYeri.y - oyuncu.yaricap);
+            
+            oyuncu.hizY = 0;
+            oyuncu.yerdeMi = true;
+            oyuncu.kacinciPlatformda = yeniIsinlanmaYeri.id;
+            
+            setTimeout(() => oyunDurdu = false, 1000);
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 11. OYUN GÜNCELLEME VE ÇARPIŞMA TESPİTİ 
+        
+        function oyunuGuncelle() { 
+            if (oyunKazanildi === true || oyunBitti === true || oyunDuraklatildi === true) return;
+            //olası durumlar oyunun kazanılması oyunun duraklatılması oyunun kaybedilmesi
+
+            // Skor hedeflerine ulaşılınca Boss/Evren değişimi tetiklenir
+            //ilk portal 5000 skor olunca spawm olur diğeri de 6000 de
+            if (skor >= sonrakiEvrenSkoru && sonrakiEvrenSkoru < 5000) {
+                sonrakiEvrenSkoru += 1000;
+                normalEvrenDegisimi();
+            } 
+            if (skor >= 5000 && sonrakiEvrenSkoru === 5000 && !boss5000Geldi) {
+                bossUret(5000); 
+                boss5000Geldi = true;
+            } 
+            if (skor >= 6000 && sonrakiEvrenSkoru === 6000 && !boss6000Geldi) {
+                bossUret(6000); 
+                boss6000Geldi = true;
+            }
+
+            if (oyunDurdu === true) return; 
+            //esc tuşu kontrolü
+
+            let zamanCarpani = 1.0; 
+            beyazlamaMiktari = 0; 
+            //boss alanında giderek parlama efekti uygulamak için kullanıldı
+            //hazır fonksiyon bulamadığımızdan bu daha kolayımıza geldi
+            
+            //--------Boss Alanı Slow-Motion ve Beyazlama Efekti Hesabı
+            // son zıplamadaki slow motion ve beyazlaşma
+            for (let i = 0; i < platformlar.length; i++) {
+                let p = platformlar[i];
+                //olay sadece son portalda gerçekleşsin istiyoruz
+                if (p.bossMu === true && p.bossTipi === 6000 && !p.tetiklendiMi) {
+                    let oncekiP = platformlar.find(j => j.id === p.id - 1);
+                    //find fonksiyonu ile dizide bulunduğumuz portaldan bir öncesini yani portaldan öncekini buluyoruz
+                    if (oncekiP !== undefined) {
+                        let bolgedeMi = false;
+                        //önceki platformla portal arasına dinamik bir bölge oluşturduk ve bölgede olup olmadığının kontrolünü yaptık.
+                        if (tersEvren === true) {
+                            if (oyuncu.y > oncekiP.y + oncekiP.yukseklik + 80 && oyuncu.y < p.y) bolgedeMi = true;
+                            //oyuncunun y değeri önceki platformu geçtiyse istediğim bölge arasındadır
+                            //burada en başta kağıt üzerinde +80 değeri bulunmamaktaydı ancak oyunun test kısmında zıpladığımız mesafenin aslında platformun üstü olduğu görülmüş ve beyazlama efekti istemediğimiz anda çalışmıştır.
+                            //bölge olarak kullanmamızın sebebi de en başta son platformdan zıplamayla ya da skorla kontrol yaptığımız durumlarda kullanılan elmaya ya da özel platforma göre değişkenlik göstermekteydi
+                        } else {
+                            if (oyuncu.y < oncekiP.y && oyuncu.y > p.y + p.yukseklik + 80) bolgedeMi = true;
+                        }
+
+                        if (bolgedeMi && !oyuncu.yerdeMi) {
+                            zamanCarpani = 0.25; 
+                            let toplamBosluk =  p.y - (oncekiP.y + oncekiP.yukseklik + 80);
+                            let kalanMesafe =  p.y - oyuncu.y;
+                            let parlaklik = 1 - (kalanMesafe / toplamBosluk);
+                            beyazlamaMiktari = Math.min(1, Math.max(0, parlaklik * 1.5));
+                            //min ve max ile sınırlar veriiyoruz bu sayede mantıksal bir şekilde hata oluşturup görselin yüklenmesinde soruna sebep olmuyor
+                        }
+                    }
+                }
+            }
+            
+            //--------Boss Kapı Animasyonu Frame İlerletme
+            for (let i = 0; i < platformlar.length; i++) {
+                if (platformlar[i].bossMu === true) {
+                    platformlar[i].kareZamani += zamanCarpani;
+                    // slow motion durumunda portalında animasyon hızı yavaşlasın
+
+                    if (platformlar[i].kareZamani >= 5) { 
+                        platformlar[i].kareZamani = 0;
+                        platformlar[i].kareIndexi = (platformlar[i].kareIndexi + 1) % 8;
+                        //loop mantığı için modunu aldık
+                    }
+                }
+            }
+
+            //--------Oyuncunun Yatay Hareketi
+            if (tuslar.sag === true) oyuncu.x += (oyuncu.hareketHizi * zamanCarpani); 
+            if (tuslar.sol === true) oyuncu.x -= (oyuncu.hareketHizi * zamanCarpani); 
+
+            // Ekran Sınırları Kontrolü
+            if (oyuncu.x - oyuncu.yaricap < 0) oyuncu.x = oyuncu.yaricap; 
+            if (oyuncu.x + oyuncu.yaricap > canvas.width) oyuncu.x = canvas.width - oyuncu.yaricap; 
+
+            //--------Yerçekimi Uygulaması ve Düşüş Hareketi
+            oyuncu.hizY += (oyuncu.yercekimi * zamanCarpani);
+            oyuncu.y += (oyuncu.hizY * zamanCarpani);
+            oyuncu.yerdeMi = false; 
+
+            //--------Kamera Takip Mantığı (Platformlar zıt yöne kaydırılır)
+            let ekraninOrtasi = canvas.height / 2;
+            //bu değeri /3 de denediğimizde zıplamayla alakalı sıkıntılar oldu(zıplama yüksekliği azaldı)
+            if (tersEvren === false && oyuncu.y < ekraninOrtasi) { 
+                let fark = ekraninOrtasi - oyuncu.y; 
+                oyuncu.y = ekraninOrtasi; 
+                platformlar.forEach(p => p.y += fark);
+                //tüm platformları aradaki fark kadar kaydırdık bu sayede oyuncu ekrandaki platformları bitirince yukarda yenilerini beklemek zorunda kalmadı
+            } 
+            if (tersEvren === true && oyuncu.y > ekraninOrtasi) { 
+                let fark = oyuncu.y - ekraninOrtasi;
+                oyuncu.y = ekraninOrtasi;
+                platformlar.forEach(p => p.y -= fark);
+            }
+            
+            //--------Otomatik Kayma (Scroll) Hızı Ayarı ve Uygulaması
+            if (oyunBasladi === true) { 
+                kaymaHizi = 0.3 + (skor * 0.0015); 
+                if (kaymaHizi >= maksimumHiz) { 
+                    kaymaHizi = maksimumHiz;
+                    canvas.style.boxShadow = '0 0 50px rgba(160, 0, 0, 0.9)'; 
+                }
+                let gercekKayma = kaymaHizi * zamanCarpani;
+                platformlar.forEach(p => p.y += (tersEvren ? -gercekKayma : gercekKayma));
+                oyuncu.y += (tersEvren ? -gercekKayma : gercekKayma);
+                //platformları ve karakteri ayrı ayrı kaydırdık
+            }
+
+            let carpmaHataPayi = oyuncu.yaricap * 0.8;
+            // elma kullanımında ve özel platform kullanımında sonraki platforma yerleşmede bazı durumlarda hatalar yaşandı bu yüzden bu hata payı eklemesi yapıldı
+            let gercekHizY = oyuncu.hizY * zamanCarpani; 
+
+            //--------ÇARPIŞMA TESPİT DÖNGÜSÜ
+            for (let i = 0; i < platformlar.length; i++) {
+                let p = platformlar[i];
+                if (p.silinecekMi === true) continue;
+                
+                //--------Elma Toplama Kontrolü
+                if (p.elmaVarMi === true  &&  p.elmaAlindiMi === false) {
+                    let elmaX = p.x + p.genislik / 2;
+                    let elmaY = tersEvren ? (p.y + p.yukseklik + 15) : (p.y - 15); 
+                    
+                    
+                    let xFarki = oyuncu.x - elmaX;
+                    let yFarki = oyuncu.y - elmaY;
+                    let aradakiMesafe = Math.sqrt((xFarki * xFarki) + (yFarki * yFarki)); 
+                    //pisagor teoremi
+
+                    if (aradakiMesafe < oyuncu.yaricap + 15) { 
+                        //15 elmanın yarıçap değerinden
+                        p.elmaAlindiMi = true;
+                        elmaGucuVar = true; 
+                        sesElma.currentTime = 0;
+                        sesElma.play().catch(e => console.log("Elma sesi çalınamadı:", e));
+                    }
+                }
+
+                //--------Boss Portalına Girme Çarpışması
+                if (p.bossMu === true) {
+                    if (oyuncu.y + oyuncu.yaricap >= p.y && oyuncu.y - oyuncu.yaricap <= p.y + p.yukseklik) {
+                        p.silinecekMi = true; 
+                        p.tetiklendiMi = true;
+                        if (p.bossTipi === 5000) {
+                            sonrakiEvrenSkoru = 6000;
+                            bossPlatformuIleGecis(p);
+                        } 
+                        if (p.bossTipi === 6000 && !oyunKazanildi) {
+                            oyunKazanildi = true; 
+                            oyunBitti = true;
+                            sesArkaplan.pause();
+                            
+                            finalSkorGostergesi.innerText = 'Toplam Skor: ' + skor;
+                            finalEkraniKatmani.style.display = 'flex';
+                            sesFinal.currentTime = 0;
+                            sesFinal.play().catch(e => console.log("Final sesi çalınamadı:", e));
+                            //normalde burada sadece play() vardı ancak oyunu denerken bazı durumlarda müzik oynatılamamış ve oyun çökmüştü bunu önlemek için tyr catch yapısı ekledik
+                            setTimeout(() => finalEkraniKatmani.style.opacity = '1', 50);
+                            //en son final ekranını 50ms lik gecikmenin ardından getirdik ki parlamanın ardından hemen çıkmasın
+                        }
+                    }
+                    continue; 
+                }
+
+                //--------Platform Üstüne/Altına Basma Tespiti
+                if (tersEvren === false) {
+                    if (oyuncu.hizY > 0 && oyuncu.y + oyuncu.yaricap >= p.y && oyuncu.y + oyuncu.yaricap <= p.y + 5 + Math.abs(gercekHizY)) {
+                        //karakter havda akış yönü tersinde mi - karakterin ayak tabanı zemini geçti mi - karakter platformu delip geçti mi
+                        if (oyuncu.x + carpmaHataPayi >= p.x && oyuncu.x - carpmaHataPayi <= p.x + p.genislik) {
+                            oyuncu.y = p.y - oyuncu.yaricap; 
+                            //karakteri platforma oturttuk
+                            oyuncu.hizY = 0; 
+                            oyuncu.yerdeMi = true;
+                            oyuncu.kacinciPlatformda = p.id;
+                            if (p.puanAlindiMi === false) {
+                                //aynı platforma in çık yapılarak puan alınmasını önlemeye çalıştık
+                                p.puanAlindiMi = true;
+                                skor += (kaymaHizi >= maksimumHiz) ? 100 : 50; 
+                            }
+                        }
+                    }
+                } 
+                else {
+                    if (oyuncu.hizY < 0 && oyuncu.y - oyuncu.yaricap <= p.y + p.yukseklik && oyuncu.y - oyuncu.yaricap >= p.y + p.yukseklik - 5 - Math.abs(gercekHizY)) {
+                        if (oyuncu.x + carpmaHataPayi >= p.x && oyuncu.x - carpmaHataPayi <= p.x + p.genislik) {
+                            oyuncu.y = p.y + p.yukseklik + oyuncu.yaricap; 
+                            oyuncu.hizY = 0; oyuncu.yerdeMi = true; oyuncu.kacinciPlatformda = p.id; 
+                            if (p.puanAlindiMi === false) {
+                                p.puanAlindiMi = true;
+                                skor += (kaymaHizi >= maksimumHiz) ? 100 : 50; 
+                            }
+                        }
+                    }
+                }
+            }
+
+            //--------Ekrandan Düşen Platformları Silme
+            for (let i = 0; i < platformlar.length; i++) {
+                if (tersEvren === false) {
+                    platformlar[i].silinecekMi = (platformlar[i].y >= canvas.height + PLATFORM_KALINLIK + 150);
+                    //oyunun daha oynanabilir olması için 150px verdik
+                } 
+                else {
+                    platformlar[i].silinecekMi = (platformlar[i].y + platformlar[i].yukseklik <= -150);
+                }
+            }
+            platformlar = platformlar.filter(p => !p.silinecekMi);
+            //filter komutu sayesinde ekranda kalması gerekneleri yeni bir dizi oluşturur gibi tuttuk
+            
+            // Sürekli Yeni Platform Üretimi
+            let bossGelecekMi = platformlar.some(p => p.bossMu && !p.tetiklendiMi);
+            //some fonksiyonu sayesinde dizimde var mı yok mu şeklinde boolean değer döndürebiliyoruz
+            while (platformlar.length < 8 && !bossGelecekMi) {
+                let enUctaki = platformlar[0];
+                for (let i = 1; i < platformlar.length; i++) {
+                    if (tersEvren === false && platformlar[i].y < enUctaki.y) enUctaki = platformlar[i];
+                    if (tersEvren === true && platformlar[i].y > enUctaki.y) enUctaki = platformlar[i];
+                }
+                //ufak bi aramayla en uçtakini yani üzerine eklenecek olan platformu buluyoruz
+                let aradakiBosluk = enUctaki.bordoMu ? 250 : 110;
+                //burada bordo ifadesi kafa karıştırabilir ancak oyuna asset yüklemeden önce bordo renkte kullandığımızdan ve artık ağız alışkanlığı olduğundan bu şekilde bıraktık 
+                platformUret(enUctaki.y + (tersEvren ? aradakiBosluk : -aradakiBosluk), enUctaki); 
+            }
+
+            //--------Karakterin Ekrandan Çıkması
+            if (tersEvren === true && oyuncu.y + oyuncu.yaricap < -100) {
+                oyunBitti = true; 
+                sesArkaplan.pause();
+            } 
+            if (tersEvren === false && oyuncu.y - oyuncu.yaricap > canvas.height + 100) {
+                oyunBitti = true; 
+                sesArkaplan.pause();
+            }
+
+            if (oyunBitti === true && oyunKazanildi === false) tekrarOynaButonu.style.display = 'block'; 
+
+            //--------Oyuncu Animasyon Güncellemesi
+            let eskiDurum = oyuncu.durum;
+            if (oyuncu.yerdeMi === false) {
+                oyuncu.durum = (tuslar.sag || tuslar.sol) ? 'solaZiplama' : 'ziplama';
+                //burada sola zıplama şeklinde kullanmamızın sebebi assetlerde sola dönük olmasındandır bunu scale ile sonra değiştireceğiz
+            } 
+            else {
+                oyuncu.durum = (tuslar.sag || tuslar.sol) ? 'yurume' : 'durma';
+            }
+
+            //--------Animasyon Frame İlerletme
+            if (eskiDurum !== oyuncu.durum) { 
+                //animasyon karesini anında değiştirmeye yarar
+                oyuncu.kareIndexi = 0; 
+                oyuncu.kareZamani = 0; 
+            }
+            oyuncu.kareZamani += zamanCarpani;
+            if (oyuncu.kareZamani >= oyuncu.kareGecikmesi) {
+                oyuncu.kareZamani = 0; 
+                oyuncu.kareIndexi++; 
+                
+                let toplamKareSayisi = 1;
+                if (oyuncu.durum === 'yurume') toplamKareSayisi = 7;
+                else if (oyuncu.durum === 'ziplama') toplamKareSayisi = 6;
+                else if (oyuncu.durum === 'solaZiplama') toplamKareSayisi = 2;
+                
+                if (oyuncu.kareIndexi >= toplamKareSayisi) {
+                    oyuncu.kareIndexi = (oyuncu.durum === 'ziplama' || oyuncu.durum === 'solaZiplama') ? toplamKareSayisi - 1 : 0;
+                    //zıplama ve yürümenin davranışları birbirinden farklıdır zıplarken havada pozda kalma yani son resime götürür yürürken ise baştataki resme döndürür ve loopa girer.
+                }
+            }
+        }
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 12. CANVAS ÇİZİM (RENDER) MOTORU
+        
+        //Ana çizim fonksiyonu: Her karede çağrılarak oyundaki tüm görsel öğeleri Canvas üzerine çizer.
+        function ekraniCiz() {
+        
+        //Eğer oyun kazanıldıysa, canvas çizimi durdurulur ve görsel geri bildirim CSS/HTML katmanına bırakılır.
+        if (oyunKazanildi === true) return; 
+
+        
+        // Ters evren mekaniğine göre uygun arka plan resmi seçilir.
+        let suankiArkaplan = tersEvren ? resimler.arkaplanTers : resimler.arkaplanDuz;
+        
+        //Resim başarıyla yüklendiyse canvas boyutlarında ekrana basılır.
+        if (suankiArkaplan.complete && suankiArkaplan.naturalHeight !== 0) {
+            ctx.drawImage(suankiArkaplan, 0, 0, canvas.width, canvas.height);
+        } else {
+            //Resim yüklenemediyse veya henüz hazır değilse, hata almamak için fallback (yedek) düz renk çizilir.
+            ctx.fillStyle = tersEvren ? '#b0b0b0' : '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        //ATMOSFER FİLTRESİ
+        //Gündüz veya gece (ters evren) hissiyatını vermek için tüm ekranın üzerine yarı saydam bir renk katmanı atılır.
+        ctx.fillStyle = tersEvren ? 'rgba(255, 255, 255, 0.35)' : 'rgba(15, 15, 25, 0.65)'; 
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        //PLATFORM VE OBJE ÇİZİMİ
+        for (let i = 0; i < platformlar.length; i++) {
+            let p = platformlar[i];
+            
+            //Ekrandan çıkmış veya yok edilmiş platformlar çizim maliyetini düşürmek için atlanır.
+            if (p.silinecekMi === true) continue;
+            
+            //Boss Platformu Çizimi
+            if (p.bossMu === true) {
+                let bossResmi = tersEvren ? resimler.bossTers[p.kareIndexi] : resimler.bossDuz[p.kareIndexi];
+                if (bossResmi && bossResmi.complete && bossResmi.naturalHeight !== 0) {
+                    ctx.save(); // Mevcut canvas matrisini kaydeder.
+                    // Döndürme işlemi için orijin noktasını boss'un merkezine taşır.
+                    ctx.translate(p.x + p.genislik / 2, p.y + p.yukseklik / 2);
+                    ctx.rotate(tersEvren ? -Math.PI / 2 : Math.PI / 2); // Evrene göre 90 derece döndür
+                    ctx.drawImage(bossResmi, -45, -canvas.width / 2 - 10, 90, canvas.width + 20);
+                    ctx.restore(); //Diğer çizimleri bozmamak için matrisi eski haline getirir.
+                }
+            }
+            //Normal ve Özel Platformların Çizimi
+            else {
+                //Zıplatan (ismi bordo olsa da sarı olan) veya normal platform resmi belirlenir.
+                let seciliResim = p.bordoMu ? resimler.ozelPlatform : (tersEvren ? resimler.platformTers : resimler.platformDuz);
+                
+                if (seciliResim.complete && seciliResim.naturalHeight !== 0) {
+                    //Platformun boyutuna göre resmin kaç kez yan yana/alt alta döşeneceği hesaplanır.
+                    let yatay = Math.ceil(p.genislik / KARE_GENISLIK);
+                    let dikey = Math.ceil(p.yukseklik / KARE_YUKSEKLIK); 
+                    
+                    ctx.save();
+                    //Ters evrendeysek platformlar baş aşağı (Y ekseninde flip edilerek) çizilir.
+                    if (tersEvren === true) {
+                        ctx.translate(0, p.y + p.yukseklik / 2);
+                        ctx.scale(1, -1); // Y eksenini tersine çevir
+                        ctx.translate(0, -(p.y + p.yukseklik / 2));
+                    }
+                    
+                    //Texture Mapping: Platform resmini hesaplanan grid yapısına göre döşer.
+                    for (let v = 0; v < dikey; v++) {
+                        for (let h = 0; h < yatay; h++) {
+                            ctx.drawImage(seciliResim, p.x + (h * KARE_GENISLIK), p.y + (v * KARE_YUKSEKLIK), KARE_GENISLIK, KARE_YUKSEKLIK);
+                        }
+                    }
+                    ctx.restore();
+                    
+                    //Zıplatan (ismi bordo olsa da sarı olan) Platform Işıma (yani Glow) Efekti
+                    //Karakter bu platforma bastığında tetiklenen görsel efekt.
+                    if (p.bordoMu === true && p.parlamaZamani > 0) {
+                        p.parlamaYaricapi += 4; // Halka giderek büyür.
+                        ctx.beginPath();
+                        ctx.arc(p.x + p.genislik / 2, p.y + p.yukseklik / 2, p.parlamaYaricapi, 0, Math.PI * 2);
+                        //Saydamlık parlama zamanına bağlı olarak yavaşça azalır.
+                        ctx.strokeStyle = `rgba(255, 77, 77, ${p.parlamaZamani / 40})`; 
+                        ctx.lineWidth = 4;
+                        ctx.stroke(); 
+                        p.parlamaZamani--; // Efektin ömrünü azaltır.
+                    }
+                } 
+            }
+
+            //Toplanabilir Obje (yani Elma) Çizimi
+            if (p.elmaVarMi === true && p.elmaAlindiMi === false) {
+                let elmaX = p.x + p.genislik / 2;
+                // Ters evrendeyse elma platformun altında, düz evrendeyse üstünde durur.
+                let elmaY = tersEvren ? (p.y + p.yukseklik + 15) : (p.y - 15);
+                
+                if (resimler.elma.complete && resimler.elma.naturalHeight !== 0) {
+                    ctx.save(); 
+                    ctx.translate(elmaX, elmaY);
+                    if (tersEvren === true) ctx.scale(-1, -1); //Ters evrende elmayı da baş aşağıya çevirir.
+                    ctx.drawImage(resimler.elma, -15, -15, 30, 30);
+                    ctx.restore();
+                }
+            }
+        }
+
+        //KARAKTER ÇİZİMİ
+        //Eğer oyuncu power-up (yani elma) aldıysa etrafına altın rengi bir hale çizilir.
+        if (elmaGucuVar === true) {
+            ctx.fillStyle = 'rgba(255, 215, 0, 0.5)'; 
+            ctx.beginPath(); 
+            ctx.arc(oyuncu.x, oyuncu.y, oyuncu.yaricap + 8, 0, Math.PI * 2); 
+            ctx.fill();
+        }
+
+        //Oyuncunun mevcut durumuna göre oynatılacak animasyon dizisi belirlenir.
+        let aktifDizi = tersEvren ? resimler.durmaTers : resimler.durmaDuz;
+        if (!tersEvren) {
+            if (oyuncu.durum === 'yurume') aktifDizi = resimler.yurumeAnimasyonu;
+            else if (oyuncu.durum === 'ziplama') aktifDizi = resimler.ziplamaAnimasyonu;
+            else if (oyuncu.durum === 'solaZiplama') aktifDizi = resimler.solaZiplamaAnimasyonu;
+        }
+        
+        //Animasyon dizisindeki geçerli kare seçilir. Dizi değilse tekil resim alınır.
+        let cizilecekKare = Array.isArray(aktifDizi) ? aktifDizi[oyuncu.kareIndexi] : aktifDizi;
+        //Ergün Hocamıza selamlar...
+
+        ctx.save(); 
+        ctx.translate(oyuncu.x, oyuncu.y);
+        
+        //Yönelim (Sprite Flipping): Oyuncu sağa bakıyorsa X ekseninde aynalama yapılır.
+        if (oyuncu.baktigiYon === 'sag') ctx.scale(-1, 1); 
+        //Ters evrende karakter de baş aşağı döner.
+        if (tersEvren === true) ctx.scale(1, -1); 
+
+        if (cizilecekKare && cizilecekKare.complete && cizilecekKare.naturalHeight !== 0) {
+            let boyut = oyuncu.yaricap * 2.5; 
+            //Karakterin merkezinden çizilmesi için x ve y koordinatları boyutun yarısı kadar geriye çekilir.
+            ctx.drawImage(cizilecekKare, -boyut/2, -boyut/2, boyut, boyut);
+        }
+        ctx.restore();
+
+        //KULLANICI ARAYÜZÜ VE BİLGİ METİNLERİ
+        //Evren değişimi sırasında ekranı dondurup uyarı metni gösterme.
+        if (oyunDurdu === true) { 
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#FF0000'; ctx.textAlign = 'center'; ctx.font = 'bold 24px Arial';
+            ctx.fillText('DİKKAT!', canvas.width / 2, canvas.height / 2 - 20);
+            
+            ctx.fillStyle = '#FFFFFF'; ctx.font = '20px Arial';
+            ctx.fillText('EVREN DEĞİŞİYOR...', canvas.width / 2, canvas.height / 2 + 20);
+            ctx.textAlign = 'left';
+        }
+
+        //Ekranın beyazlayarak parlaması efekti
+        if (beyazlamaMiktari > 0) {
+            ctx.fillStyle = `rgba(255, 255, 255, ${beyazlamaMiktari})`;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        //Skor Çizimi
+        ctx.textAlign = 'left'; ctx.font = 'bold 20px Arial';
+        ctx.fillStyle = tersEvren ? '#000000' : '#FFFFFF'; //Evrene göre metin rengi zıt ayarlanır.
+        ctx.shadowColor = tersEvren ? 'white' : 'black'; //Okunabilirliği artırmak için metin gölgesi.
+        ctx.shadowBlur = 4;
+        ctx.fillText('Skor: ' + skor, 15, 30);
+        ctx.shadowBlur = 0; //Gölgeyi sıfırla ki diğer metinlere etki etmesin.
+        
+        //Zorluk Çizimi
+        ctx.textAlign = 'right'; 
+        if (oyunBasladi && !oyunBitti && !oyunDurdu) {
+            ctx.font = '12px Arial';
+            ctx.fillText('Zorluk: ' + kaymaHizi.toFixed(2), canvas.width - 15, 30);
+        }
+        ctx.textAlign = 'left'; //Ayarı varsayılana döndürür.
+
+        //Duraklatma Ekranı
+        if (oyunDuraklatildi === true) {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; 
+            ctx.font = 'bold 30px Arial'; ctx.fillText('OYUN DURAKLATILDI', canvas.width / 2, canvas.height / 2);
+            ctx.font = '16px Arial'; ctx.fillText('Devam etmek için ESC tuşuna bas', canvas.width / 2, canvas.height / 2 + 30);
+            ctx.textAlign = 'left';
+        }
+
+        //Oyun Bitti Ekranı
+        if (oyunBitti === true && oyunKazanildi === false) { 
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.8)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; 
+            ctx.font = 'bold 40px Arial'; ctx.fillText('OYUN BİTTİ', canvas.width / 2, canvas.height / 2 - 60);
+            ctx.font = '20px Arial'; ctx.fillText('Toplam Skor: ' + skor, canvas.width / 2, canvas.height / 2 - 20);
+            ctx.textAlign = 'left';
+        }
+}
+
+        //-------------------------------------------------------------------------------------------------------------
+        // 13. OYUN DÖNGÜSÜ 
+        
+        function oyunDongusu() {
+            oyunuGuncelle();
+            ekraniCiz();
+            if (oyunBitti === false) {
+                // Tarayıcı hazır oldukça bu fonksiyonu çağırarak sürekli animasyon yaratır
+                requestAnimationFrame(oyunDongusu);
+            }
+        }
+    </script>
+</body>
+</html>
