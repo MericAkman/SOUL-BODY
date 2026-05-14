@@ -1,6 +1,6 @@
 # SOUL&BODY
 
-BBu proje Web Tabanlı Programlama dersi (veya kişisel portfolyo) kapsamında geliştirilmiştir. Sadece HTML5 Canvas ve Vanilla JavaScript kullanılarak kodlanmış, sonsuz ilerlemeli (infinite scroller) ve yerçekimi manipülasyonuna dayalı 2 boyutlu bir piksel art platform oyunudur.
+Bu proje Web Tabanlı Programlama dersi (veya kişisel portfolyo) kapsamında geliştirilmiştir. Sadece HTML5 Canvas ve Vanilla JavaScript kullanılarak kodlanmış, sonsuz ilerlemeli (infinite scroller) ve yerçekimi manipülasyonuna dayalı 2 boyutlu bir piksel art platform oyunudur.
 
 Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa Boss Portalları ile evrenin kurallarını altüst eder. Yerçekiminin yön değiştirdiği bu macerada reflekslerinizi ve hızınızı test edin!
 
@@ -11,30 +11,26 @@ Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa Boss Portall
 ## 📸 Ekran Görüntüleri
 
 ![ekran1](Proje/BG/start-bg.png)
-![ekran2](images/ekran2.png)
+![ekran2](Proje/BG/final-bg.png)
 
 ## 🎮 Nasıl Oynanır?
 
-- Oyuna başlarken bir strateji seç (Ofansif, Defansif veya Dengeli).
-- Boş noktaları tıklayarak pinlerini yerleştir.
-- **Space** tuşuna basarak 3 top at.
-- Toplar pinlere çarptıkça etkiler tetiklenir (hasar, iyileşme, savunma).
-- Her raund sonunda yeni pin eklenebilir.
-- 3 seviye boyunca rakibi yenmeye çalış.
-- Oyun bitince **R** tuşuyla yeniden başlayabilirsin.
+- Oyun yukarı saha ve sol yön tuşlarıyla oynanmaktadır.
+- Özel durumlarda space ile atlamak gerekmektedir.
+- Oynarken evrenin akış yönüne dikkat edilmesi gerekmektedir.
+- Oyun "esc" ile duraklatılabilmektedir.
 
 ## 🔊 Özellikler
 
-- HTML5 Canvas kullanımı
-- JavaScript ile oyun mekaniği
+- Özel etkileşim ses efektleri
 - Arkaplan müziği
-- Pin çarpışmalarına ses efektleri
-- 3 farklı strateji seçimi
-- Seviye sistemi
+- JavaScript ile oyun mekaniği
+- HTML5 Canvas kullanımı
+- Giderek bir noktaya kadar zorlaşan seviye sistemi
 
 ## ▶️ Oynanış Videosu
 
-[Youtube Linki](https://youtu.be/pnuEffFnzuQ?si=KSMqTKYe-uea5SLV)
+[Youtube Linki]([https://youtu.be/pnuEffFnzuQ?si=KSMqTKYe-uea5SLV](https://youtu.be/CcdmYDDoaE4))
 
 ## 📜 Credits
 
@@ -42,14 +38,13 @@ Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa Boss Portall
 
 | Tür                     | Açıklama                          | Kaynak                                                                 |
 |-------------------------|-----------------------------------|------------------------------------------------------------------------|
-| 🎶 Arka Plan Müziği     | War - Pixabay                     | [War - Pixabay](https://pixabay.com/music/main-title-war-99133/)       |
-| 🔊 Seviye Atlama Sesi   | Spacey 1Up - FreeSound            | [Spacey 1Up - FreeSound](https://freesound.org/people/GameAudio/sounds/220173/) |
-| 🔔 Pin Sesi             | CCCanto07 - FreeSound             | [CCCanto07 - FreeSound](https://freesound.org/people/SuGu14/sounds/77982/)      |
-| 💀 Game Over Sesi       | Game Over - Pixabay               | [Game Over - Pixabay](https://pixabay.com/sound-effects/gameover-86548/)        |
-| 🏆 Kazanma Sesi         | Medieval Fanfare - Pixabay        | [Medieval Fanfare - Pixabay](https://pixabay.com/sound-effects/medieval-fanfare-6826/) |
-| 🧠 Strateji Arka Planı  | Pinterest Görseli                 | [Pinterest](https://tr.pinterest.com/pin/139048707236785739/)          |
-| 🏟️ Oyun Ana Arka Planı | Gladiator Arena - ArtStation      | [ArtStation](https://www.artstation.com/artwork/gladiator-arena-1)     |
-| 🤖 Diğer Görseller      | AI ile üretilmiştir               | —                                                                      |
+| 🎶 Arka Plan Müziği     | War - Pixabay                     | [War - Pixabay](https://pixabay.com/music/search/background%20music)            |
+| 🔊 Ses Efektleri        | War - Pixabay                     | [War - Pixabay](https://pixabay.com/sound-effects/search/collectible/) |
+| 🧱 Platformlar           | Brackeys_games             | [Brackeys_games](https://brackeysgames.itch.io/brackeys-platformer-bundle)      |
+| 🍎 Elme                 | Brackeys_games              | [Brackeys_games](https://brackeysgames.itch.io/brackeys-platformer-bundle)        |
+| 🌀 Portallar           | F1xtach.itch       | [F1xtach.itch](https://f1xtach.itch.io/pixel-art-portal) |
+| 🏃 Karakter  | Segnah.itch                 | [Segnah.itch](https://segnah.itch.io/meppo?download)          |
+| 🤖 Arka Plan     | AI ile üretilmiştir               | —                                                                      |
 
 
 ---
