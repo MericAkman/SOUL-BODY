@@ -41,7 +41,7 @@ Oyuncu, platformlar üzerinde hayatta kalmaya çalışırken devasa portallar il
 | 🎶 Arka Plan Müziği     | War - Pixabay                     | [War - Pixabay](https://pixabay.com/music/search/background%20music)            |
 | 🔊 Ses Efektleri        | War - Pixabay                     | [War - Pixabay](https://pixabay.com/sound-effects/search/collectible/) |
 | 🧱 Platformlar           | Brackeys_games             | [Brackeys_games](https://brackeysgames.itch.io/brackeys-platformer-bundle)      |
-| 🍎 Elme                 | Brackeys_games              | [Brackeys_games](https://brackeysgames.itch.io/brackeys-platformer-bundle)        |
+| 🍎 Elma                 | Brackeys_games              | [Brackeys_games](https://brackeysgames.itch.io/brackeys-platformer-bundle)        |
 | 🌀 Portallar           | F1xtach.itch       | [F1xtach.itch](https://f1xtach.itch.io/pixel-art-portal) |
 | 🏃 Karakter  | Segnah.itch                 | [Segnah.itch](https://segnah.itch.io/meppo?download)          |
 | 🤖 Arka Plan     | AI ile üretilmiştir               | —                                                                      |
